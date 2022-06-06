@@ -319,7 +319,7 @@ int quickSort(int *a, int n)
 }
 
 int hashCode(int key) {
-   return key % MAX_HASH_TABLE_SIZE;
+   return key % MAX_HASH_TABLE_SIZE; //해쉬 키를 반환
 }
 
 int hashing(int *a, int **ht)
@@ -328,14 +328,14 @@ int hashing(int *a, int **ht)
 
 	/* hash table이 NULL인 경우 메모리 할당 */
 	if(*ht == NULL) {
-		hashtable = (int*)malloc(sizeof(int) * MAX_ARRAY_SIZE);
+		hashtable = (int*)malloc(sizeof(int) * MAX_ARRAY_SIZE); //해쉬테이블 메모리 할당
 		*ht = hashtable;  /* 할당된 메모리의 주소를 복사 --> main에서 배열을 control 할수 있도록 함*/
 	} else {
 		hashtable = *ht;	/* hash table이 NULL이 아닌경우, table 재활용, reset to -1 */
 	}
 
 	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
-		hashtable[i] = -1;
+		hashtable[i] = -1; //해쉬테이블 초기화
 
 	/*
 	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
@@ -345,46 +345,46 @@ int hashing(int *a, int **ht)
 	int key = -1;
 	int hashcode = -1;
 	int index = -1;
-	for (int i = 0; i < MAX_ARRAY_SIZE; i++)
+	for (int i = 0; i < MAX_ARRAY_SIZE; i++) //배열의 크기만큼 i를 반복자로 반복
 	{
-		key = a[i];
-		hashcode = hashCode(key);
+		key = a[i]; //key에 a[i]를 대입
+		hashcode = hashCode(key); //hashcode에 일정한 키로 제한된 key값을 대입
 		/*
 		printf("key = %d, hashcode = %d, hashtable[%d]=%d\n", key, hashcode, hashcode, hashtable[hashcode]);
 		*/
-		if (hashtable[hashcode] == -1)
+		if (hashtable[hashcode] == -1) //해당 해쉬테이블의 해쉬코드에 키가 없을 경우
 		{
-			hashtable[hashcode] = key;
-		} else 	{
+			hashtable[hashcode] = key; //해당 해쉬코드에 키 추가
+		} else 	{ //해당 해쉬테이블의 해쉬코드에 키가 있을 경우
 
-			index = hashcode;
+			index = hashcode; //index에 hashcode대입
 
-			while(hashtable[index] != -1)
+			while(hashtable[index] != -1) //빈 해쉬테이블을 찾을 때 까지
 			{
-				index = (++index) % MAX_HASH_TABLE_SIZE;
+				index = (++index) % MAX_HASH_TABLE_SIZE; //가능한 해쉬코드 내에서 해쉬코드 변경
 				/*
 				printf("index = %d\n", index);
 				*/
 			}
-			hashtable[index] = key;
+			hashtable[index] = key; //해당 해쉬코드에 키 추가
 		}
 	}
-
+    //해쉬테이블에 해쉬코드(나머지연산)에 해당하는 키를 추가하는 내용이다
 	return 0;
 }
 
 int search(int *ht, int key)
 {
-	int index = hashCode(key);
+	int index = hashCode(key); //찾고자 하는 key를 해쉬코드로 변환
+    
+	if(ht[index] == key) //해당 해쉬코드에서 키를 찾았을 경우
+		return index; //해당 해쉬코드 반환
 
-	if(ht[index] == key)
-		return index;
-
-	while(ht[++index] != key)
+	while(ht[++index] != key) //키를 찾지 못했을 경우
 	{
-		index = index % MAX_HASH_TABLE_SIZE;
+		index = index % MAX_HASH_TABLE_SIZE; //인접 해쉬코드 참조
 	}
-	return index;
+	return index; //해당 해쉬코드 반환
 }
 
 
